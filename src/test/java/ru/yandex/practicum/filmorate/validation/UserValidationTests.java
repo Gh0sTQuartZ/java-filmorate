@@ -7,6 +7,7 @@ import java.time.*;
 
 public class UserValidationTests {
     private User user;
+
     @BeforeEach
     private void beforeEach() {
         // Перед каждым тестом приводим пользователя к валидному состоянию

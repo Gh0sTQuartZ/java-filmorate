@@ -9,13 +9,9 @@ import java.time.*;
 @Data
 @AllArgsConstructor
 public class Film extends StorageData {
-    @NotBlank
-    String name;
-    @NotBlank
-    @Size(max = 200)
-    String description;
+    @NotBlank String name;
+    @NotBlank @Size(max = 200) String description;
     @FilmReleaseDateConstraint
     LocalDate releaseDate;
-    @Positive
-    int duration;
+    @Positive int duration;
 }

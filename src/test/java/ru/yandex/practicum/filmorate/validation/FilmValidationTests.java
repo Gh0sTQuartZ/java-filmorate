@@ -7,6 +7,7 @@ import java.time.*;
 
 public class FilmValidationTests {
     private Film film;
+
     @BeforeEach
     private void beforeEach() {
         // Перед каждым тестом приводим фильм к валидному состоянию

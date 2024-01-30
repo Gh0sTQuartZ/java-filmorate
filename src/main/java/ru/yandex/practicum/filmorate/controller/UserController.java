@@ -27,8 +27,7 @@ public class UserController extends InMemoryController<User> {
             body.setName(body.getLogin());
         }
         User updatedUser = super.update(body);
-        log.info("Пользователь с идентификационным номером {} обновлён, данные обновлённого пользователя: {}",
-                updatedUser.getId(), updatedUser);
+        log.info("Пользователь с идентификационным номером {} обновлён, данные обновлённого пользователя: {}", updatedUser.getId(), updatedUser);
         return updatedUser;
     }
 }

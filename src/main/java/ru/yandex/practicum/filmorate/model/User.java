@@ -9,13 +9,9 @@ import java.time.*;
 @Data
 @AllArgsConstructor
 public class User extends StorageData {
-    @NotNull
-    @Email
-    String email;
+    @NotNull @Email String email;
     @UserLoginConstraint
     String login;
     String name;
-    @Past
-    @NotNull
-    LocalDate birthday;
+    @Past @NotNull LocalDate birthday;
 }

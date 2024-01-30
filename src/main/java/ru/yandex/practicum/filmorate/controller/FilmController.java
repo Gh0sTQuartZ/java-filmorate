@@ -23,8 +23,7 @@ public class FilmController extends InMemoryController<Film> {
     @PutMapping
     public Film update(@Valid @RequestBody Film body) throws IdNotFoundException {
         Film updatedFilm = super.update(body);
-        log.info("Фильм с идентификационным номером {} обновлён, данные обновлённого фильма: {}",
-                updatedFilm.getId(), updatedFilm);
+        log.info("Фильм с идентификационным номером {} обновлён, данные обновлённого фильма: {}", updatedFilm.getId(), updatedFilm);
         return updatedFilm;
     }
 }
