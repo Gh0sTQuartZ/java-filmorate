@@ -8,14 +8,14 @@ import java.time.*;
 
 @Data
 @AllArgsConstructor
-public class Film extends StorageData {
-    @NotBlank
+public class User extends StorageData {
+    @NotNull
+    @Email
+    String email;
+    @UserLoginConstraint
+    String login;
     String name;
-    @NotBlank
-    @Size(max = 200)
-    String description;
-    @FilmReleaseDateConstraint
-    LocalDate releaseDate;
-    @Positive
-    int duration;
+    @Past
+    @NotNull
+    LocalDate birthday;
 }
