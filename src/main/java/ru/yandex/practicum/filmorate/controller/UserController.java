@@ -6,28 +6,54 @@ import ru.yandex.practicum.filmorate.exception.*;
 import ru.yandex.practicum.filmorate.model.*;
 
 import javax.validation.*;
+import java.util.*;
 
 @RestController
 @RequestMapping("/users")
 @Slf4j
-public class UserController extends InMemoryController<User> {
-    @Override
-    public User create(@Valid @RequestBody final User body) {
-        if (body.getName() == null || body.getName().isBlank()) {
-            body.setName(body.getLogin());
-        }
-        User createdUser = super.create(body);
-        log.info("Добавлен новый пользователь: {}", body);
-        return createdUser;
+public class UserController {
+    private final HashMap<Integer, User> userStorage = new HashMap<>();
+    private int idCounter = 1;
+
+    @GetMapping
+    public List<User> getAll() {
+        log.info("Получен GET запрос на эндпоинт /users");
+
+        return new ArrayList<>(userStorage.values());
     }
 
-    @Override
-    public User update(@Valid @RequestBody final User body) throws IdNotFoundException {
-        if (body.getName() == null || body.getName().isBlank()) {
-            body.setName(body.getLogin());
+    @PostMapping
+    public User create(@Valid @RequestBody final User user) {
+        log.info("Получен POST запрос на эндпоинт /users");
+
+        user.setId(idCounter++);
+        nameCheck(user);
+
+        userStorage.put(user.getId(), user);
+        log.info("Добавлен новый пользователь: {}", user);
+
+        return user;
+    }
+
+    @PutMapping
+    public User update(@Valid @RequestBody final User user) throws NotFoundException {
+        log.info("Получен PUT запрос на эндпоинт /users");
+
+        if (!userStorage.containsKey(user.getId())) {
+            throw new NotFoundException("id не найден: ", user.getId());
         }
-        User updatedUser = super.update(body);
-        log.info("Пользователь с идентификационным номером {} обновлён, данные обновлённого пользователя: {}", updatedUser.getId(), updatedUser);
-        return updatedUser;
+        nameCheck(user);
+
+        userStorage.put(user.getId(), user);
+        log.info("Пользователь с идентификационным номером {} обновлён, данные обновлённого пользователя: {}",
+                user.getId(), user);
+
+        return user;
+    }
+
+    private void nameCheck(User user) {
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
+        }
     }
 }

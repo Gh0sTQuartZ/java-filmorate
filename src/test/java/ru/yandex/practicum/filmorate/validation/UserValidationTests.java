@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.validation;
 import org.junit.jupiter.api.*;
 import ru.yandex.practicum.filmorate.model.*;
 
+import javax.validation.constraints.*;
 import java.time.*;
 
 public class UserValidationTests {
@@ -11,7 +12,7 @@ public class UserValidationTests {
     @BeforeEach
     private void beforeEach() {
         // Перед каждым тестом приводим пользователя к валидному состоянию
-        user = new User("test@mail.ru", "testLogin", "testName",
+        user = new User(1,"test@mail.ru", "testLogin", "testName",
                 LocalDate.of(2001, 1, 1));
     }
 
