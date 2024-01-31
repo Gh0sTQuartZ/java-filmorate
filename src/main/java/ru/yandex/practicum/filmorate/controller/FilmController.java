@@ -43,8 +43,7 @@ public class FilmController {
         }
 
         filmStorage.put(film.getId(), film);
-        log.info("Фильм с идентификационным номером {} обновлён, данные обновлённого фильма: {}",
-                film.getId(), film);
+        log.info("Фильм с идентификационным номером {} обновлён, данные обновлённого фильма: {}", film.getId(), film);
 
         return film;
     }

@@ -3,12 +3,7 @@ package ru.yandex.practicum.filmorate.validation;
 import org.junit.jupiter.api.*;
 import ru.yandex.practicum.filmorate.model.*;
 
-import javax.validation.*;
-import javax.validation.constraints.*;
 import java.time.*;
-import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FilmValidationTests {
     private Film film;
@@ -16,7 +11,7 @@ public class FilmValidationTests {
     @BeforeEach
     private void beforeEach() {
         // Перед каждым тестом приводим фильм к валидному состоянию
-        film = new Film( 1,"testName", "testDescription",
+        film = new Film(1, "testName", "testDescription",
                 LocalDate.of(2001, 1, 1), 120);
     }
 
