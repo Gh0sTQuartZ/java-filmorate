@@ -9,8 +9,7 @@ import java.time.*;
 @Data
 @AllArgsConstructor
 public class Film {
-    @NotNull
-    int id;
+    Integer id;
     @NotBlank
     String name;
     @NotBlank

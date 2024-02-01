@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.extern.slf4j.*;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.*;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.*;
 
 import javax.validation.*;
@@ -38,6 +39,9 @@ public class FilmController {
     public Film update(@Valid @RequestBody final Film film) throws NotFoundException {
         log.info("Получен PUT запрос на эндпоинт /films");
 
+        if (film.getId() == null) {
+            throw new ValidationException("id фильма не был передан");
+        }
         if (!filmStorage.containsKey(film.getId())) {
             throw new NotFoundException("id не найден: ", film.getId());
         }

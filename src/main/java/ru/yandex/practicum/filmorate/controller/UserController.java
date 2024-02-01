@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.extern.slf4j.*;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.*;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.*;
 
 import javax.validation.*;
@@ -27,7 +28,7 @@ public class UserController {
         log.info("Получен POST запрос на эндпоинт /users");
 
         user.setId(idCounter++);
-        nameCheck(user);
+        initName(user);
 
         userStorage.put(user.getId(), user);
         log.info("Добавлен новый пользователь: {}", user);
@@ -39,10 +40,13 @@ public class UserController {
     public User update(@Valid @RequestBody final User user) throws NotFoundException {
         log.info("Получен PUT запрос на эндпоинт /users");
 
-        if (!userStorage.containsKey(user.getId())) {
-            throw new NotFoundException("id не найден: ", user.getId());
+        if (user.getId() == null) {
+            throw new ValidationException("Айди пользователя не был передан");
         }
-        nameCheck(user);
+        if (!userStorage.containsKey(user.getId())) {
+            throw new NotFoundException("id пользователя не найден, id: ", user.getId());
+        }
+        initName(user);
 
         userStorage.put(user.getId(), user);
         log.info("Пользователь с идентификационным номером {} обновлён, данные обновлённого пользователя: {}",
@@ -51,7 +55,7 @@ public class UserController {
         return user;
     }
 
-    private void nameCheck(User user) {
+    private void initName(User user) {
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }

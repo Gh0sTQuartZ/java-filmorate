@@ -9,8 +9,7 @@ import java.time.*;
 @Data
 @AllArgsConstructor
 public class User {
-    @NotNull
-    int id;
+    Integer id;
     @NotNull
     @Email
     String email;
