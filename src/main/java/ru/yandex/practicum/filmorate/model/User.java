@@ -8,15 +8,15 @@ import java.time.*;
 
 @Data
 @AllArgsConstructor
-public class Film {
+public class User {
     Integer id;
-    @NotBlank
+    @NotNull
+    @Email
+    String email;
+    @UserLoginConstraint
+    String login;
     String name;
-    @NotBlank
-    @Size(max = 200)
-    String description;
-    @FilmReleaseDateConstraint
-    LocalDate releaseDate;
-    @Positive
-    int duration;
+    @NotNull
+    @Past
+    LocalDate birthday;
 }
