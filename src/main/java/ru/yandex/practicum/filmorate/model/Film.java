@@ -5,18 +5,24 @@ import ru.yandex.practicum.filmorate.validation.*;
 
 import javax.validation.constraints.*;
 import java.time.*;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
 public class Film {
-    Integer id;
-    @NotBlank
-    String name;
-    @NotBlank
-    @Size(max = 200)
-    String description;
+    Long id;
+    @NotBlank String name;
+    @NotBlank @Size(max = 200) String description;
     @FilmReleaseDateConstraint
     LocalDate releaseDate;
-    @Positive
-    int duration;
+    @Positive int duration;
+    Set<Long> likes;
+
+    public void addLike(final long id) {
+        likes.add(id);
+    }
+
+    public void deleteLike(final long id) {
+        likes.remove(id);
+    }
 }

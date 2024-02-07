@@ -4,6 +4,7 @@ import org.junit.jupiter.api.*;
 import ru.yandex.practicum.filmorate.model.*;
 
 import java.time.*;
+import java.util.*;
 
 public class UserValidationTests {
     private User user;
@@ -11,8 +12,8 @@ public class UserValidationTests {
     @BeforeEach
     private void beforeEach() {
         // Перед каждым тестом приводим пользователя к валидному состоянию
-        user = new User(1, "test@mail.ru", "testLogin", "testName",
-                LocalDate.of(2001, 1, 1));
+        user = new User(1l, "test@mail.ru", "testLogin", "testName",
+                LocalDate.of(2001, 1, 1), new HashSet<>());
     }
 
     @Test

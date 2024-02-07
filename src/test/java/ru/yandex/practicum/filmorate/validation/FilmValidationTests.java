@@ -4,6 +4,7 @@ import org.junit.jupiter.api.*;
 import ru.yandex.practicum.filmorate.model.*;
 
 import java.time.*;
+import java.util.*;
 
 public class FilmValidationTests {
     private Film film;
@@ -11,8 +12,8 @@ public class FilmValidationTests {
     @BeforeEach
     private void beforeEach() {
         // Перед каждым тестом приводим фильм к валидному состоянию
-        film = new Film(1, "testName", "testDescription",
-                LocalDate.of(2001, 1, 1), 120);
+        film = new Film(1l, "testName", "testDescription",
+                LocalDate.of(2001, 1, 1), 120, new HashSet<>());
     }
 
     @Test
