@@ -10,9 +10,8 @@ public class FilmValidationTests {
     private Film film;
 
     @BeforeEach
-    private void beforeEach() {
-        // Перед каждым тестом приводим фильм к валидному состоянию
-        film = new Film(1l, "testName", "testDescription",
+    public void beforeEach() {
+        film = new Film(1L, "testName", "testDescription",
                 LocalDate.of(2001, 1, 1), 120, new HashSet<>());
     }
 
