@@ -5,7 +5,6 @@ import ru.yandex.practicum.filmorate.validation.*;
 
 import javax.validation.constraints.*;
 import java.time.*;
-import java.util.*;
 
 @Data
 @AllArgsConstructor
@@ -20,13 +19,4 @@ public class User {
     @NotNull
     @Past
     LocalDate birthday;
-    Set<Long> friends;
-
-    public void addFriend(final long id) {
-        friends.add(id);
-    }
-
-    public void deleteFriend(final long id) {
-        friends.remove(id);
-    }
 }

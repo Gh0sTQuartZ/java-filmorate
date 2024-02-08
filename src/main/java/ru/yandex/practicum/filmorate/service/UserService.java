@@ -10,11 +10,10 @@ import ru.yandex.practicum.filmorate.storage.*;
 import java.util.*;
 import java.util.stream.*;
 
-import static java.lang.Long.*;
 
 @Service
 @Slf4j
-public class UserService {
+public class UserService implements UserServiceInterface {
     private final UserStorage userStorage;
     private long idCounter = 1;
 
@@ -23,108 +22,85 @@ public class UserService {
         this.userStorage = userStorage;
     }
 
+    @Override
     public List<User> getAllUsers() {
         log.info("Получение списка всех пользователей");
         return userStorage.getAll();
     }
 
-    public User getUser(final String idParam) {
-        long id = parseLong(idParam);
+    @Override
+    public User getUser(final long id) {
+        User user = userStorage.get(id).orElseThrow(() -> new NotFoundException("id пользователя не найден: ", id));
 
-        if (!userStorage.contains(id)) {
-            throw new NotFoundException("id пользователя не найден: ", id);
-        }
         log.info("Получение фильма id={}", id);
-        return userStorage.get(id);
+        return user;
     }
 
+    @Override
     public User createUser(final User user) {
         user.setId(idCounter++);
         initName(user);
-        user.setFriends(new HashSet<>());
         log.info("Добавление фильма, присвоенный id={}", user.getId());
         return userStorage.create(user);
     }
 
+    @Override
     public User updateUser(final User user) {
         if (user.getId() == null) {
             throw new ValidationException("Id пользователя не передан");
         }
-        if (!userStorage.contains(user.getId())) {
-            throw new NotFoundException("id пользователя не найден: ", user.getId());
-        }
+        userStorage.get(user.getId()).orElseThrow(
+                () -> new NotFoundException("id пользователя не найден: ", user.getId())
+        );
 
         initName(user);
-        user.setFriends(userStorage.get(user.getId()).getFriends());
         log.info("Обновление фильма id={}", user.getId());
         return userStorage.update(user);
     }
 
-    public void addFriend(final String userIdParam, final String friendIdParam) {
-        final long userId = parseLong(userIdParam);
-        final long friendId = parseLong(friendIdParam);
-
-        if (!userStorage.contains(userId)) {
-            throw new NotFoundException("id пользователя не найден: ", userId);
-        }
-        if (!userStorage.contains(friendId)) {
-            throw new NotFoundException("id друга не найден: ", friendId);
-        }
+    @Override
+    public void addFriend(final long userId, final long friendId) {
+        userStorage.get(userId).orElseThrow(() -> new NotFoundException("id пользователя не найден: ", userId));
+        userStorage.get(friendId).orElseThrow(() -> new NotFoundException("id друга не найден: ", friendId));
 
         log.info("Пользователь id={} добавляет пользователя id={} в друзья", userId, friendId);
-        userStorage.get(userId).addFriend(friendId);
-        userStorage.get(friendId).addFriend(userId);
+        userStorage.addFriend(userId, friendId);
+        userStorage.addFriend(friendId, userId);
     }
 
-
-    public void deleteFriend(final String userIdParam, final String friendIdParam) {
-        final long userId = parseLong(userIdParam);
-        final long friendId = parseLong(friendIdParam);
-
-        if (!userStorage.contains(userId)) {
-            throw new NotFoundException("id пользователя не найден: ", userId);
-        }
-        if (!userStorage.contains(friendId)) {
-            throw new NotFoundException("id друга не найден: ", friendId);
-        }
+    @Override
+    public void deleteFriend(final long userId, final long friendId) {
+        userStorage.get(userId).orElseThrow(() -> new NotFoundException("id пользователя не найден: ", userId));
+        userStorage.get(friendId).orElseThrow(() -> new NotFoundException("id друга не найден: ", friendId));
 
         log.info("Пользователь id={} удаляет пользователя id={} из друзей", userId, friendId);
-        userStorage.get(userId).deleteFriend(friendId);
-        userStorage.get(friendId).deleteFriend(userId);
+        userStorage.deleteFriend(userId, friendId);
+        userStorage.deleteFriend(friendId, userId);
     }
 
-
-    public List<User> getUserFriends(String userIdParam) {
-        final long userId = parseLong(userIdParam);
-
-        if (!userStorage.contains(userId)) {
-            throw new NotFoundException("id пользователя не найден: ", userId);
-        }
+    @Override
+    public List<User> getUserFriends(final long userId) {
+        userStorage.get(userId).orElseThrow(() -> new NotFoundException("id пользователя не найден: ", userId));
 
         log.info("Получение списка друзей пользователя id={}", userId);
-        return userStorage.get(userId).getFriends()
+        return userStorage.getFriends(userId)
                 .stream()
-                .map(userStorage::get)
+                .map((id) -> userStorage.get(id).get())
                 .collect(Collectors.toList());
     }
 
-    public List<User> getUsersCommonFriends(String userIdParam, String otherUserIdParam) {
-        final long userId = parseLong(userIdParam);
-        final long otherUserId = parseLong(otherUserIdParam);
+    @Override
+    public List<User> getUsersCommonFriends(final long userId, final long otherUserId) {
+        userStorage.get(userId).orElseThrow(() -> new NotFoundException("id пользователя не найден: ", userId));
+        userStorage.get(otherUserId).orElseThrow(() -> new NotFoundException("id другого пользователя не найден: ", otherUserId));
 
-        if (!userStorage.contains(userId)) {
-            throw new NotFoundException("id пользователя не найден: ", userId);
-        }
-        if (!userStorage.contains(otherUserId)) {
-            throw new NotFoundException("id другого пользователя не найден: ", otherUserId);
-        }
 
-        Set<Long> commons = new HashSet<>(userStorage.get(userId).getFriends());
-        commons.retainAll(new HashSet<>(userStorage.get(otherUserId).getFriends()));
+        Set<Long> commons = new HashSet<>(userStorage.getFriends(userId));
+        commons.retainAll(new HashSet<>(userStorage.getFriends(otherUserId)));
 
         log.info("Получение списка общих друзей пользователей id={} и id={}", userId, otherUserId);
         return commons.stream()
-                .map(userStorage::get)
+                .map((id) -> userStorage.get(id).get())
                 .collect(Collectors.toList());
     }
 
