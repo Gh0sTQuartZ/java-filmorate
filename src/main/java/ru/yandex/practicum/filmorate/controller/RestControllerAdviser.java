@@ -12,7 +12,7 @@ public class RestControllerAdviser {
     @ExceptionHandler()
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorDto handleNotFoundException(final NotFoundException exception) {
-        final ErrorDto errorDto = new ErrorDto(exception.getClass(), exception.getMessage());
+        final ErrorDto errorDto = new ErrorDto(exception.getClass().getName(), exception.getMessage());
         log.warn(exception.getMessage(), exception);
         return errorDto;
     }
@@ -20,7 +20,7 @@ public class RestControllerAdviser {
     @ExceptionHandler()
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDto handleValidationException(final ValidationException exception) {
-        final ErrorDto errorDto = new ErrorDto(exception.getClass(), exception.getMessage());
+        final ErrorDto errorDto = new ErrorDto(exception.getClass().getName(), exception.getMessage());
         log.warn(exception.getMessage(), exception);
         return errorDto;
     }
@@ -28,7 +28,7 @@ public class RestControllerAdviser {
     @ExceptionHandler()
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDto handleException(final Exception exception) {
-        final ErrorDto errorDto = new ErrorDto(exception.getClass(), exception.getMessage());
+        final ErrorDto errorDto = new ErrorDto(exception.getClass().getName(), exception.getMessage());
         log.warn(exception.getMessage(), exception);
         return errorDto;
     }

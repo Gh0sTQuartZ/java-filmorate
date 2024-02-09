@@ -30,7 +30,8 @@ public class FilmService implements FilmServiceInterface {
 
     @Override
     public Film getFilm(final long id) {
-        Film film = filmStorage.get(id).orElseThrow(() -> new NotFoundException("id фильма не найден: ", id));
+        Film film = filmStorage.get(id)
+                .orElseThrow(() -> new NotFoundException("id фильма не найден: ", id));
 
         log.info("Получение фильма id={}", id);
         return film;
@@ -48,7 +49,8 @@ public class FilmService implements FilmServiceInterface {
         if (film.getId() == null) {
             throw new ValidationException("id фильма не передан");
         }
-        filmStorage.get(film.getId()).orElseThrow(() -> new NotFoundException("id фильма не найден: ", film.getId()));
+        filmStorage.get(film.getId())
+                .orElseThrow(() -> new NotFoundException("id фильма не найден: ", film.getId()));
 
         log.info("Обновление фильма id={}", film.getId());
         return filmStorage.update(film);
@@ -56,8 +58,10 @@ public class FilmService implements FilmServiceInterface {
 
     @Override
     public void addLike(final long filmId, final long userId) {
-        filmStorage.get(filmId).orElseThrow(() -> new NotFoundException("id фильма не найден: ", filmId));
-        userStorage.get(userId).orElseThrow(() -> new NotFoundException("id пользователя не найден: ", userId));
+        filmStorage.get(filmId)
+                .orElseThrow(() -> new NotFoundException("id фильма не найден: ", filmId));
+        userStorage.get(userId)
+                .orElseThrow(() -> new NotFoundException("id пользователя не найден: ", userId));
 
         log.info("Пользователь id={} ставит лайк фильму id={}", userId, filmId);
         filmStorage.addLike(filmId, userId);
@@ -65,8 +69,10 @@ public class FilmService implements FilmServiceInterface {
 
     @Override
     public void deleteLike(long filmId, long userId) {
-        filmStorage.get(filmId).orElseThrow(() -> new NotFoundException("id фильма не найден: ", filmId));
-        userStorage.get(userId).orElseThrow(() -> new NotFoundException("id пользователя не найден: ", userId));
+        filmStorage.get(filmId)
+                .orElseThrow(() -> new NotFoundException("id фильма не найден: ", filmId));
+        userStorage.get(userId)
+                .orElseThrow(() -> new NotFoundException("id пользователя не найден: ", userId));
 
         log.info("Пользователь id={} удаляет лайк фильма id={}", userId, filmId);
         filmStorage.deleteLike(filmId, userId);

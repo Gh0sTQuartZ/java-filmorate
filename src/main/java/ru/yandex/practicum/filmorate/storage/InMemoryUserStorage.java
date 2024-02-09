@@ -5,6 +5,7 @@ import org.springframework.stereotype.*;
 import ru.yandex.practicum.filmorate.model.*;
 
 import java.util.*;
+import java.util.stream.*;
 
 @Component
 @Slf4j
@@ -35,17 +36,32 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public Set<Long> getFriends(final long id) {
-        return friends.get(id);
+    public List<User> getFriends(final long id) {
+        return friends.get(id)
+                .stream()
+                .map(userStorage::get)
+                .collect(Collectors.toList());
     }
 
     @Override
     public void addFriend(final long id, final long friendId) {
         friends.get(id).add(friendId);
+        friends.get(friendId).add(id);
     }
 
     @Override
     public void deleteFriend(final long id, final long friendId) {
         friends.get(id).remove(friendId);
+        friends.get(friendId).remove(id);
+    }
+
+    @Override
+    public List<User> getCommonFriends(final long userId, final long otherUserId) {
+        Set<Long> commons = new HashSet<>(friends.get(userId));
+        commons.retainAll(new HashSet<>(friends.get(otherUserId)));
+
+        return commons.stream()
+                .map(userStorage::get)
+                .collect(Collectors.toList());
     }
 }
