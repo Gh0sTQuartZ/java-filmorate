@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.extern.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 import ru.yandex.practicum.filmorate.exception.*;
@@ -10,7 +9,6 @@ import ru.yandex.practicum.filmorate.storage.*;
 import java.util.*;
 
 @Service
-@Slf4j
 public class UserService implements UserServiceInterface {
     private final UserStorage userStorage;
     private long idCounter = 1;
@@ -22,7 +20,6 @@ public class UserService implements UserServiceInterface {
 
     @Override
     public List<User> getAllUsers() {
-        log.info("Получение списка всех пользователей");
         return userStorage.getAll();
     }
 
@@ -30,8 +27,6 @@ public class UserService implements UserServiceInterface {
     public User getUser(final long id) {
         User user = userStorage
                 .get(id).orElseThrow(() -> new NotFoundException("id пользователя не найден: ", id));
-
-        log.info("Получение фильма id={}", id);
         return user;
     }
 
@@ -39,7 +34,6 @@ public class UserService implements UserServiceInterface {
     public User createUser(final User user) {
         user.setId(idCounter++);
         initName(user);
-        log.info("Добавление фильма, присвоенный id={}", user.getId());
         return userStorage.create(user);
     }
 
@@ -53,7 +47,6 @@ public class UserService implements UserServiceInterface {
                 );
 
         initName(user);
-        log.info("Обновление фильма id={}", user.getId());
         return userStorage.update(user);
     }
 
@@ -64,7 +57,6 @@ public class UserService implements UserServiceInterface {
         userStorage.get(friendId)
                 .orElseThrow(() -> new NotFoundException("id друга не найден: ", friendId));
 
-        log.info("Пользователь id={} добавляет пользователя id={} в друзья", userId, friendId);
         userStorage.addFriend(userId, friendId);
     }
 
@@ -75,7 +67,6 @@ public class UserService implements UserServiceInterface {
         userStorage.get(friendId)
                 .orElseThrow(() -> new NotFoundException("id друга не найден: ", friendId));
 
-        log.info("Пользователь id={} удаляет пользователя id={} из друзей", userId, friendId);
         userStorage.deleteFriend(userId, friendId);
     }
 
@@ -84,7 +75,6 @@ public class UserService implements UserServiceInterface {
         userStorage.get(userId)
                 .orElseThrow(() -> new NotFoundException("id пользователя не найден: ", userId));
 
-        log.info("Получение списка друзей пользователя id={}", userId);
         return userStorage.getFriends(userId);
     }
 
@@ -95,7 +85,6 @@ public class UserService implements UserServiceInterface {
         userStorage.get(otherUserId)
                 .orElseThrow(() -> new NotFoundException("id другого пользователя не найден: ", otherUserId));
 
-        log.info("Получение списка общих друзей пользователей id={} и id={}", userId, otherUserId);
         return userStorage.getCommonFriends(userId, otherUserId);
     }
 

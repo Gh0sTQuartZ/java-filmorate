@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.extern.slf4j.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 import ru.yandex.practicum.filmorate.exception.*;
@@ -10,7 +9,6 @@ import ru.yandex.practicum.filmorate.storage.*;
 import java.util.*;
 
 @Service
-@Slf4j
 public class FilmService implements FilmServiceInterface {
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
@@ -24,7 +22,6 @@ public class FilmService implements FilmServiceInterface {
 
     @Override
     public List<Film> getAllFilms() {
-        log.info("Получение списка всех фильмов");
         return filmStorage.getAll();
     }
 
@@ -32,15 +29,12 @@ public class FilmService implements FilmServiceInterface {
     public Film getFilm(final long id) {
         Film film = filmStorage.get(id)
                 .orElseThrow(() -> new NotFoundException("id фильма не найден: ", id));
-
-        log.info("Получение фильма id={}", id);
         return film;
     }
 
     @Override
     public Film createFilm(final Film film) {
         film.setId(idCounter++);
-        log.info("Добавление фильма, присвоенный id=", film.getId());
         return filmStorage.create(film);
     }
 
@@ -52,7 +46,6 @@ public class FilmService implements FilmServiceInterface {
         filmStorage.get(film.getId())
                 .orElseThrow(() -> new NotFoundException("id фильма не найден: ", film.getId()));
 
-        log.info("Обновление фильма id={}", film.getId());
         return filmStorage.update(film);
     }
 
@@ -63,7 +56,6 @@ public class FilmService implements FilmServiceInterface {
         userStorage.get(userId)
                 .orElseThrow(() -> new NotFoundException("id пользователя не найден: ", userId));
 
-        log.info("Пользователь id={} ставит лайк фильму id={}", userId, filmId);
         filmStorage.addLike(filmId, userId);
     }
 
@@ -74,13 +66,11 @@ public class FilmService implements FilmServiceInterface {
         userStorage.get(userId)
                 .orElseThrow(() -> new NotFoundException("id пользователя не найден: ", userId));
 
-        log.info("Пользователь id={} удаляет лайк фильма id={}", userId, filmId);
         filmStorage.deleteLike(filmId, userId);
     }
 
     @Override
     public List<Film> getPopularFilms(final long size) {
-        log.info("Получение списка популярных фильмов, размер={}", size);
         return filmStorage.getPopularFilms(size);
     }
 }

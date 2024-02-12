@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.storage;
 
-import lombok.extern.slf4j.*;
 import org.springframework.stereotype.*;
 import ru.yandex.practicum.filmorate.model.*;
 
@@ -8,7 +7,6 @@ import java.util.*;
 import java.util.stream.*;
 
 @Component
-@Slf4j
 public class InMemoryFilmStorage implements FilmStorage {
     private final HashMap<Long, Film> filmStorage = new HashMap<>();
     private final HashMap<Long, Set<Long>> likes = new HashMap<>();
@@ -48,15 +46,9 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public List<Film> getPopularFilms(final long size) {
-        List<Film> sorted = filmStorage.values().stream()
+        return filmStorage.values().stream()
                 .sorted((a, b) -> Integer.compare(likes.get(b.getId()).size(), likes.get(a.getId()).size()))
+                .limit(size)
                 .collect(Collectors.toList());
-
-        List<Film> ranged = new ArrayList<>();
-        for (int i = 0; i < size && i < sorted.size(); i++) {
-            ranged.add(sorted.get(i));
-        }
-
-        return ranged;
     }
 }

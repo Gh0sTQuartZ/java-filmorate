@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.storage;
 
-import lombok.extern.slf4j.*;
 import org.springframework.stereotype.*;
 import ru.yandex.practicum.filmorate.model.*;
 
@@ -8,7 +7,6 @@ import java.util.*;
 import java.util.stream.*;
 
 @Component
-@Slf4j
 public class InMemoryUserStorage implements UserStorage {
     private final HashMap<Long, User> userStorage = new HashMap<>();
     private final HashMap<Long, Set<Long>> friends = new HashMap<>();
