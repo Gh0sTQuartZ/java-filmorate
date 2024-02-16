@@ -9,14 +9,10 @@ import java.time.*;
 @Data
 @AllArgsConstructor
 public class Film {
-    Integer id;
-    @NotBlank
-    String name;
-    @NotBlank
-    @Size(max = 200)
-    String description;
+    Long id;
+    @NotBlank String name;
+    @NotBlank @Size(max = 200) String description;
     @FilmReleaseDateConstraint
     LocalDate releaseDate;
-    @Positive
-    int duration;
+    @Positive int duration;
 }
