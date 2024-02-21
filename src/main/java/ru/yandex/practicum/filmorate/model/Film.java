@@ -5,8 +5,10 @@ import ru.yandex.practicum.filmorate.validation.*;
 
 import javax.validation.constraints.*;
 import java.time.*;
+import java.util.*;
 
 @Data
+@Builder
 @AllArgsConstructor
 public class Film {
     Long id;
@@ -15,4 +17,6 @@ public class Film {
     @FilmReleaseDateConstraint
     LocalDate releaseDate;
     @Positive int duration;
+    Set<Genre> genres;
+    MPA mpa;
 }

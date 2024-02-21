@@ -7,6 +7,7 @@ import javax.validation.constraints.*;
 import java.time.*;
 
 @Data
+@Builder
 @AllArgsConstructor
 public class User {
     Long id;

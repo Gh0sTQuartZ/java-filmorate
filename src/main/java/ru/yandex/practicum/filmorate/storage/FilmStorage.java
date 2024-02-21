@@ -2,12 +2,13 @@ package ru.yandex.practicum.filmorate.storage;
 
 import ru.yandex.practicum.filmorate.model.*;
 
+import java.sql.*;
 import java.util.*;
 
 public interface FilmStorage {
-    List<Film> getAll();
+    List<Film> getAll() throws SQLException;
 
-    Optional<Film> get(final long id);
+    Optional<Film> get(final long id) throws SQLException;
 
     Film create(final Film film);
 
@@ -17,5 +18,5 @@ public interface FilmStorage {
 
     void deleteLike(final long id, final long userId);
 
-    List<Film> getPopularFilms(final long size);
+    List<Film> getPopularFilms(final long size) throws SQLException;
 }

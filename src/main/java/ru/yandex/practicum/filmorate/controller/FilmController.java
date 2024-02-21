@@ -7,58 +7,59 @@ import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.service.*;
 
 import javax.validation.*;
+import java.sql.*;
 import java.util.*;
 
 @RestController
 @RequestMapping("/films")
 @Slf4j
 public class FilmController {
-    private final FilmService filmService;
+    private final FilmServiceImpl filmServiceImpl;
 
     @Autowired
-    public FilmController(FilmService filmService) {
-        this.filmService = filmService;
+    public FilmController(FilmServiceImpl filmServiceImpl) {
+        this.filmServiceImpl = filmServiceImpl;
     }
 
     @GetMapping
-    public List<Film> getAllFilms() {
+    public List<Film> getAllFilms() throws SQLException {
         log.info("Получение списка всех фильмов");
-        return filmService.getAllFilms();
+        return filmServiceImpl.getAllFilms();
     }
 
     @GetMapping("/{id}")
-    public Film getFilm(@PathVariable final long id) {
+    public Film getFilm(@PathVariable final long id) throws SQLException {
         log.info("Получение фильма id={}", id);
-        return filmService.getFilm(id);
+        return filmServiceImpl.getFilm(id);
     }
 
     @PostMapping
     public Film createFilm(@Valid @RequestBody final Film film) {
         log.info("Добавление фильма, присвоенный id=", film.getId());
-        return filmService.createFilm(film);
+        return filmServiceImpl.createFilm(film);
     }
 
     @PutMapping
-    public Film updateFilm(@Valid @RequestBody final Film film) {
+    public Film updateFilm(@Valid @RequestBody final Film film) throws SQLException {
         log.info("Обновление фильма id={}", film.getId());
-        return filmService.updateFilm(film);
+        return filmServiceImpl.updateFilm(film);
     }
 
     @PutMapping("/{id}/like/{userId}")
-    public void addLike(@PathVariable final long id, @PathVariable final long userId) {
+    public void addLike(@PathVariable final long id, @PathVariable final long userId) throws SQLException {
         log.info("Пользователь id={} ставит лайк фильму id={}", userId, id);
-        filmService.addLike(id, userId);
+        filmServiceImpl.addLike(id, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public void deleteLike(@PathVariable final long id, @PathVariable final long userId) {
+    public void deleteLike(@PathVariable final long id, @PathVariable final long userId) throws SQLException {
         log.info("Пользователь id={} удаляет лайк фильма id={}", userId, id);
-        filmService.deleteLike(id, userId);
+        filmServiceImpl.deleteLike(id, userId);
     }
 
     @GetMapping("/popular")
-    public List<Film> getPopularFilms(@RequestParam(defaultValue = "10") final Long count) {
+    public List<Film> getPopularFilms(@RequestParam(defaultValue = "10") final Long count) throws SQLException {
         log.info("Получение списка популярных фильмов, размер={}", count);
-        return filmService.getPopularFilms(count);
+        return filmServiceImpl.getPopularFilms(count);
     }
 }
