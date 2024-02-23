@@ -5,7 +5,7 @@ import ru.yandex.practicum.filmorate.model.*;
 import java.util.*;
 
 public interface GenreService {
-    List<Genre> getAllGenres();
+    List<Genre> getAll();
 
-    Genre getGenre(final Long id);
+    Genre get(final Long id);
 }

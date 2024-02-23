@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.jdbc.core.*;
+import lombok.*;
+import org.springframework.jdbc.core.namedparam.*;
 import org.springframework.stereotype.*;
 import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.*;
@@ -10,30 +10,23 @@ import java.sql.*;
 import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class MPADbStorage implements MPAStorage {
-    private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public MPADbStorage(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    private final NamedParameterJdbcOperations jdbcOperations;
 
     @Override
     public List<MPA> getAll() {
         String sql = "SELECT * FROM mpa";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> makeMPA(rs));
+        return jdbcOperations.query(sql, (rs, rowNum) -> makeMPA(rs));
     }
 
     @Override
     public Optional<MPA> get(long id) {
         String sql = "SELECT * FROM mpa " +
-                "WHERE mpa_id = ?";
-        List<MPA> mpa = jdbcTemplate.query(sql, (rs, rowNum) -> makeMPA(rs), id);
-        if (mpa.isEmpty()) {
-            return Optional.empty();
-        } else {
-            return Optional.of(mpa.get(0));
-        }
+                "WHERE mpa_id = :id";
+        MapSqlParameterSource parameterSource = new MapSqlParameterSource("id", id);
+        List<MPA> mpa = jdbcOperations.query(sql, parameterSource, (rs, rowNum) -> makeMPA(rs));
+        return mpa.stream().findFirst();
     }
 
     MPA makeMPA(final ResultSet rs) throws SQLException {

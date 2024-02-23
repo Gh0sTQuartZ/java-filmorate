@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.springframework.beans.factory.annotation.*;
+import lombok.*;
 import org.springframework.stereotype.*;
 import ru.yandex.practicum.filmorate.exception.*;
 import ru.yandex.practicum.filmorate.model.*;
@@ -9,36 +9,30 @@ import ru.yandex.practicum.filmorate.storage.*;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserStorage userStorage;
-    private long idCounter = 1;
-
-    @Autowired
-    public UserServiceImpl(UserStorage userStorage) {
-        this.userStorage = userStorage;
-    }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<User> getAll() {
         return userStorage.getAll();
     }
 
     @Override
-    public User getUser(final long id) {
+    public User get(final long id) {
         User user = userStorage
                 .get(id).orElseThrow(() -> new NotFoundException("id пользователя не найден: ", id));
         return user;
     }
 
     @Override
-    public User createUser(final User user) {
-        user.setId(idCounter++);
+    public User create(final User user) {
         initName(user);
         return userStorage.create(user);
     }
 
     @Override
-    public User updateUser(final User user) {
+    public User update(final User user) {
         if (user.getId() == null) {
             throw new ValidationException("Id пользователя не передан");
         }
@@ -71,7 +65,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getUserFriends(final long userId) {
+    public List<User> getFriends(final long userId) {
         userStorage.get(userId)
                 .orElseThrow(() -> new NotFoundException("id пользователя не найден: ", userId));
 
@@ -79,7 +73,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getUsersCommonFriends(final long userId, final long otherUserId) {
+    public List<User> getCommonFriends(final long userId, final long otherUserId) {
         userStorage.get(userId)
                 .orElseThrow(() -> new NotFoundException("id пользователя не найден: ", userId));
         userStorage.get(otherUserId)

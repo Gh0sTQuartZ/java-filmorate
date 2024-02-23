@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.*;
 import lombok.extern.slf4j.*;
-import org.springframework.beans.factory.annotation.*;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.service.*;
@@ -12,36 +12,32 @@ import java.util.*;
 @RestController
 @RequestMapping("/users")
 @Slf4j
+@RequiredArgsConstructor
 public class UserController {
-    private final UserServiceImpl userServiceImpl;
-
-    @Autowired
-    public UserController(UserServiceImpl userServiceImpl) {
-        this.userServiceImpl = userServiceImpl;
-    }
+    private final UserService userServiceImpl;
 
     @GetMapping
-    public List<User> getAllUsers() {
+    public List<User> getAll() {
         log.info("Получение списка всех пользователей");
-        return userServiceImpl.getAllUsers();
+        return userServiceImpl.getAll();
     }
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable final long id) {
+    public User get(@PathVariable final long id) {
         log.info("Получение пользователя id={}", id);
-        return userServiceImpl.getUser(id);
+        return userServiceImpl.get(id);
     }
 
     @PostMapping
-    public User createUser(@Valid @RequestBody final User user) {
+    public User create(@Valid @RequestBody final User user) {
         log.info("Добавление пользователя, присвоенный id={}", user.getId());
-        return userServiceImpl.createUser(user);
+        return userServiceImpl.create(user);
     }
 
     @PutMapping
-    public User updateUser(@Valid @RequestBody final User user) {
+    public User update(@Valid @RequestBody final User user) {
         log.info("Обновление пользователя id={}", user.getId());
-        return userServiceImpl.updateUser(user);
+        return userServiceImpl.update(user);
     }
 
     @PutMapping("/{id}/friends/{friendId}")
@@ -57,14 +53,14 @@ public class UserController {
     }
 
     @GetMapping("/{id}/friends")
-    public List<User> getUserFriends(@PathVariable final long id) {
+    public List<User> getFriends(@PathVariable final long id) {
         log.info("Получение списка друзей пользователя id={}", id);
-        return userServiceImpl.getUserFriends(id);
+        return userServiceImpl.getFriends(id);
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public List<User> getUsersCommonFriends(@PathVariable final long id, @PathVariable final long otherId) {
+    public List<User> getCommonFriends(@PathVariable final long id, @PathVariable final long otherId) {
         log.info("Получение списка общих друзей пользователей id={} и id={}", id, otherId);
-        return userServiceImpl.getUsersCommonFriends(id, otherId);
+        return userServiceImpl.getCommonFriends(id, otherId);
     }
 }

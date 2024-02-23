@@ -1,10 +1,10 @@
-package ru.yandex.practicum.filmorate.DAO;
+package ru.yandex.practicum.filmorate.storage.dao;
 
 import lombok.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.test.autoconfigure.jdbc.*;
-import org.springframework.jdbc.core.*;
+import org.springframework.jdbc.core.namedparam.*;
 import org.springframework.test.annotation.*;
 import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.dao.*;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class FilmDbStorageTests {
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
     private FilmDbStorage storage;
     private UserDbStorage userStorage;
     private Film film1;
@@ -143,24 +143,20 @@ public class FilmDbStorageTests {
     }
 
     @Test
-    @DisplayName("Получение списка популярных фильмов при наличии лайков")
+    @DisplayName("Получение самого популярного фильма при наличии лайков")
     public void shouldReturnPopularFilmsListWhenLikesAdded() throws SQLException {
         userStorage.create(user);
         storage.create(film1);
         storage.create(film2);
         storage.addLike(film2.getId(), user.getId());
 
-        List<Film> popularFilms = storage.getPopularFilms(10);
+        List<Film> popularFilms = storage.getPopular(1);
 
-        assertEquals(2, popularFilms.size());
+        assertEquals(1, popularFilms.size());
         assertThat(popularFilms.get(0))
                 .isNotNull()
                 .usingRecursiveComparison()
                 .isEqualTo(film2);
-        assertThat(popularFilms.get(1))
-                .isNotNull()
-                .usingRecursiveComparison()
-                .isEqualTo(film1);
     }
 
     @Test
@@ -169,7 +165,7 @@ public class FilmDbStorageTests {
         storage.create(film1);
         storage.create(film2);
 
-        List<Film> popularFilms = storage.getPopularFilms(10);
+        List<Film> popularFilms = storage.getPopular(10);
 
         assertEquals(2, popularFilms.size());
         assertThat(popularFilms.get(0))
@@ -185,7 +181,7 @@ public class FilmDbStorageTests {
     @Test
     @DisplayName("Получение списка популярных фильмов при отсутствии сохранённых фильмов")
     private void shouldReturnEmptyPopularFilmsListWhenFilmsNotAdded() throws SQLException {
-        List<Film> popularFilms = storage.getPopularFilms(10);
+        List<Film> popularFilms = storage.getPopular(10);
 
         assertTrue(popularFilms.isEmpty());
     }
@@ -196,7 +192,7 @@ public class FilmDbStorageTests {
         shouldReturnPopularFilmsListWhenLikesAdded();
         storage.deleteLike(film2.getId(), user.getId());
 
-        List<Film> popularFilms = storage.getPopularFilms(1);
+        List<Film> popularFilms = storage.getPopular(1);
 
         assertEquals(1, popularFilms.size());
         assertThat(popularFilms.get(0))

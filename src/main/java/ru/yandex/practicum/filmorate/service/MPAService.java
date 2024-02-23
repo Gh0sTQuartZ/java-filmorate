@@ -5,7 +5,7 @@ import ru.yandex.practicum.filmorate.model.*;
 import java.util.*;
 
 public interface MPAService {
-    List<MPA> getAllMPA();
+    List<MPA> getAll();
 
-    MPA getMPA(final Long id);
+    MPA get(final Long id);
 }

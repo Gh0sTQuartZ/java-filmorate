@@ -1,46 +1,38 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.springframework.beans.factory.annotation.*;
+import lombok.*;
 import org.springframework.stereotype.*;
 import ru.yandex.practicum.filmorate.exception.*;
 import ru.yandex.practicum.filmorate.model.*;
 import ru.yandex.practicum.filmorate.storage.*;
 
-import java.sql.*;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class FilmServiceImpl implements FilmService {
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
-    private long idCounter = 1;
-
-    @Autowired
-    public FilmServiceImpl(FilmStorage filmStorage, UserStorage userStorage) {
-        this.filmStorage = filmStorage;
-        this.userStorage = userStorage;
-    }
 
     @Override
-    public List<Film> getAllFilms() throws SQLException {
+    public List<Film> getAll() {
         return filmStorage.getAll();
     }
 
     @Override
-    public Film getFilm(final long id) throws SQLException {
+    public Film get(final long id) {
         Film film = filmStorage.get(id)
                 .orElseThrow(() -> new NotFoundException("id фильма не найден: ", id));
         return film;
     }
 
     @Override
-    public Film createFilm(final Film film) {
-        film.setId(idCounter++);
+    public Film create(final Film film) {
         return filmStorage.create(film);
     }
 
     @Override
-    public Film updateFilm(final Film film) throws SQLException {
+    public Film update(final Film film) {
         if (film.getId() == null) {
             throw new ValidationException("id фильма не передан");
         }
@@ -51,7 +43,7 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public void addLike(final long filmId, final long userId) throws SQLException {
+    public void addLike(final long filmId, final long userId) {
         filmStorage.get(filmId)
                 .orElseThrow(() -> new NotFoundException("id фильма не найден: ", filmId));
         userStorage.get(userId)
@@ -61,7 +53,7 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public void deleteLike(long filmId, long userId) throws SQLException {
+    public void deleteLike(long filmId, long userId) {
         filmStorage.get(filmId)
                 .orElseThrow(() -> new NotFoundException("id фильма не найден: ", filmId));
         userStorage.get(userId)
@@ -71,7 +63,7 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public List<Film> getPopularFilms(final long size) throws SQLException {
-        return filmStorage.getPopularFilms(size);
+    public List<Film> getPopular(final long size) {
+        return filmStorage.getPopular(size);
     }
 }

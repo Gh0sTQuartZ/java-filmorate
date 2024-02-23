@@ -17,6 +17,6 @@ public class Film {
     @FilmReleaseDateConstraint
     LocalDate releaseDate;
     @Positive int duration;
-    Set<Genre> genres;
+    LinkedHashSet<Genre> genres;
     MPA mpa;
 }

@@ -2,21 +2,20 @@ package ru.yandex.practicum.filmorate.service;
 
 import ru.yandex.practicum.filmorate.model.*;
 
-import java.sql.*;
 import java.util.*;
 
 public interface FilmService {
-    List<Film> getAllFilms() throws SQLException;
+    List<Film> getAll();
 
-    Film getFilm(final long id) throws SQLException;
+    Film get(final long id);
 
-    Film createFilm(final Film film);
+    Film create(final Film film);
 
-    Film updateFilm(final Film film) throws SQLException;
+    Film update(final Film film);
 
-    void addLike(final long filmId, final long userId) throws SQLException;
+    void addLike(final long filmId, final long userId);
 
-    void deleteLike(final long filmId, final long userId) throws SQLException;
+    void deleteLike(final long filmId, final long userId);
 
-    List<Film> getPopularFilms(final long size) throws SQLException;
+    List<Film> getPopular(final long size);
 }

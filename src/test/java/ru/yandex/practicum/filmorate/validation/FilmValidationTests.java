@@ -12,7 +12,7 @@ public class FilmValidationTests {
     @BeforeEach
     public void beforeEach() {
         film = new Film(1L, "testName", "testDescription",
-                LocalDate.of(2001, 1, 1), 120, new HashSet<>(), new MPA(0L, ""));
+                LocalDate.of(2001, 1, 1), 120, new LinkedHashSet<>(), new MPA(0L, ""));
     }
 
     @Test
