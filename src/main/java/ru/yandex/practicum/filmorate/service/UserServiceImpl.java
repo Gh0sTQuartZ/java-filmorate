@@ -20,8 +20,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User get(final long id) {
-        User user = userStorage
-                .get(id).orElseThrow(() -> new NotFoundException("id пользователя не найден: ", id));
+        User user = userStorage.get(id)
+                .orElseThrow(() -> new NotFoundException("id пользователя не найден: ", id));
         return user;
     }
 

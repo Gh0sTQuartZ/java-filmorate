@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
 import lombok.*;
-import org.springframework.context.annotation.*;
 import org.springframework.jdbc.core.namedparam.*;
 import org.springframework.jdbc.support.*;
 import org.springframework.stereotype.*;
@@ -12,7 +11,6 @@ import java.sql.*;
 import java.util.*;
 
 @Component
-@Primary
 @RequiredArgsConstructor
 public class UserDbStorage implements UserStorage {
     private final NamedParameterJdbcOperations jdbcOperations;

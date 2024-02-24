@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.test.autoconfigure.jdbc.*;
 import org.springframework.jdbc.core.namedparam.*;
 import ru.yandex.practicum.filmorate.model.*;
-import ru.yandex.practicum.filmorate.storage.dao.*;
 
 import java.util.*;
 

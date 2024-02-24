@@ -5,9 +5,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.test.autoconfigure.jdbc.*;
 import org.springframework.jdbc.core.namedparam.*;
-import org.springframework.test.annotation.*;
 import ru.yandex.practicum.filmorate.model.*;
-import ru.yandex.practicum.filmorate.storage.dao.*;
 
 import java.sql.*;
 import java.time.*;
@@ -18,15 +16,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @JdbcTest
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class FilmDbStorageTests {
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final User user = new User(1L, "test@email.ru", "first", "for film likes",
+            LocalDate.of(2001, 01, 01));
     private FilmDbStorage storage;
     private UserDbStorage userStorage;
     private Film film1;
     private Film film2;
-    private final User user = new User(1L, "test@email.ru", "first", "for film likes",
-            LocalDate.of(2001, 01, 01));
 
     @BeforeEach
     public void beforeEach() {
@@ -107,7 +104,7 @@ public class FilmDbStorageTests {
     }
 
     @Test
-    @DisplayName("Создание пользователя")
+    @DisplayName("Создание фльма")
     public void shouldReturnFilmWhenFilmCreated() {
         Film createdFilm = storage.create(film1);
 
@@ -120,11 +117,12 @@ public class FilmDbStorageTests {
     @Test
     @DisplayName("Обновление фильма")
     public void shouldReturnUpdatedFilmWhenFilmUpdated() {
+        storage.create(film1);
         LinkedHashSet<Genre> set = new LinkedHashSet<>();
         set.add(new Genre(1L, "Комедия"));
         set.add(new Genre(2L, "Драма"));
         Film update = Film.builder()
-                .id(1L)
+                .id(film1.getId())
                 .name("update")
                 .description("update")
                 .releaseDate(LocalDate.of(2007, 07, 07))
@@ -132,7 +130,6 @@ public class FilmDbStorageTests {
                 .genres(set)
                 .mpa(new MPA(2L, "PG"))
                 .build();
-        storage.create(film1);
 
         Film updated = storage.update(update);
 

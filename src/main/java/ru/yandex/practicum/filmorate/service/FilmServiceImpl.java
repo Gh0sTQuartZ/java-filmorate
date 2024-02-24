@@ -13,6 +13,8 @@ import java.util.*;
 public class FilmServiceImpl implements FilmService {
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
+    private final GenreStorage genreStorage;
+    private final MPAStorage mpaStorage;
 
     @Override
     public List<Film> getAll() {
@@ -28,6 +30,19 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public Film create(final Film film) {
+        MPA mpa = film.getMpa();
+        if (mpa != null) {
+            mpaStorage.get(mpa.getId())
+                    .orElseThrow(() -> new NotFoundException("id рейтинга не был найден: ", mpa.getId()));
+        }
+        LinkedHashSet<Genre> genres = film.getGenres();
+        if (genres != null && !genres.isEmpty()) {
+            for (Genre genre : genres) {
+                genreStorage.get(genre.getId())
+                        .orElseThrow(() -> new NotFoundException("id жанра не был найден: ", genre.getId()));
+            }
+        }
+
         return filmStorage.create(film);
     }
 
@@ -39,6 +54,18 @@ public class FilmServiceImpl implements FilmService {
         filmStorage.get(film.getId())
                 .orElseThrow(() -> new NotFoundException("id фильма не найден: ", film.getId()));
 
+        MPA mpa = film.getMpa();
+        if (mpa != null) {
+            mpaStorage.get(mpa.getId())
+                    .orElseThrow(() -> new NotFoundException("id рейтинга не был найден: ", mpa.getId()));
+        }
+        LinkedHashSet<Genre> genres = film.getGenres();
+        if (genres != null && !genres.isEmpty()) {
+            for (Genre genre : genres) {
+                genreStorage.get(genre.getId())
+                        .orElseThrow(() -> new NotFoundException("id жанра не был найден: ", genre.getId()));
+            }
+        }
         return filmStorage.update(film);
     }
 
@@ -66,4 +93,6 @@ public class FilmServiceImpl implements FilmService {
     public List<Film> getPopular(final long size) {
         return filmStorage.getPopular(size);
     }
+
+
 }
